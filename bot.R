@@ -1,26 +1,14 @@
-library(shiny)
+library(btw)
+library(ellmer)
 library(shinychat)
 
+options(btw.run_r.enabled = TRUE)
 Sys.setenv(ANTHROPIC_API_KEY = readLines("api-key.txt"))
 
-ui <- bslib::page_fillable(
-  chat_ui(
-    id = "chat",
-    messages = "**Hello!** How can I help you today?"
+btw_app(
+  client = ellmer::chat_anthropic(
+    system_prompt = readLines("btw.md")
   ),
-  fillable_mobile = TRUE
+  tools = btw_tools("run", "env", "session"),
+  messages = list("**Hello!** I am the ggbeeswarm bot. How can I help you today?")
 )
-
-server <- function(input, output, session) {
-  chat <-
-    ellmer::chat_anthropic(
-      system_prompt = readLines("btw.md")
-    )
-  
-  observeEvent(input$chat_user_input, {
-    stream <- chat$stream_async(input$chat_user_input)
-    chat_append("chat", stream)
-  })
-}
-
-shinyApp(ui, server)
