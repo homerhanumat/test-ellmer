@@ -1,6 +1,7 @@
 library(btw)
 library(ellmer)
 library(shinychat)
+library(ggbeeswarm)
 
 options(btw.run_r.enabled = TRUE)
 Sys.setenv(ANTHROPIC_API_KEY = readLines("api-key.txt"))
